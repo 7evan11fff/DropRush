@@ -1,0 +1,27 @@
+{
+  "name": "viral-mobile-game-ios-store",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/7evan11fff/DropRush.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/7evan11fff/DropRush/issues"
+  },
+  "homepage": "https://github.com/7evan11fff/DropRush#readme",
+  "dependencies": {
+    "@capacitor-community/admob": "^8.0.0",
+    "@capacitor/cli": "^8.3.0",
+    "@capacitor/core": "^8.3.0",
+    "@capacitor/ios": "^8.3.0"
+  }
+}

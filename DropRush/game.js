@@ -83,6 +83,30 @@ const THEMES = {
         colors: ['#FF88CC','#FFAADD','#FF66AA','#FFCCEE','#FF44CC','#FFDDFF'],
         pCol: ['#FF88CC','#FFAADD','#FFFFFF'],
         speedMod: 0.95, breakCol: '#FFEE88', phaseCol: '#FFAAEE',
+    },
+    arctic: {
+        name: 'Arctic', bgTop: '#0a1a2a', bgBot: '#1a3a5a', accent: '#aaeeff',
+        colors: ['#88DDFF','#AAEEFF','#CCFFFF','#FFFFFF','#66CCEE','#88BBDD'],
+        pCol: ['#AAEEFF','#FFFFFF','#88DDFF'],
+        speedMod: 0.9, breakCol: '#FFEE88', phaseCol: '#AAEEFF',
+    },
+    sunset: {
+        name: 'Sunset', bgTop: '#2a0a00', bgBot: '#4a2a10', accent: '#ffaa44',
+        colors: ['#FF6644','#FF8844','#FFAA44','#FFCC66','#FF4488','#FFDD88'],
+        pCol: ['#FFAA44','#FF6644','#FFFFFF'],
+        speedMod: 1.0, breakCol: '#FFEE88', phaseCol: '#FFCC66',
+    },
+    matrix: {
+        name: 'Matrix', bgTop: '#000800', bgBot: '#001a00', accent: '#00ff00',
+        colors: ['#00FF00','#00CC00','#00FF44','#44FF00','#00FF88','#88FF00'],
+        pCol: ['#00FF00','#00CC00','#FFFFFF'],
+        speedMod: 1.08, breakCol: '#FFFF00', phaseCol: '#00FF88',
+    },
+    royal: {
+        name: 'Royal', bgTop: '#0a0020', bgBot: '#1a0050', accent: '#ffcc00',
+        colors: ['#FFCC00','#FFD700','#AA88FF','#FFAA00','#CC88FF','#FFFFFF'],
+        pCol: ['#FFCC00','#AA88FF','#FFFFFF'],
+        speedMod: 0.97, breakCol: '#FFEE88', phaseCol: '#FFCC00',
     }
 };
 const THEME_KEYS = Object.keys(THEMES);
@@ -123,6 +147,7 @@ const LEVEL_UNLOCKS = [
     { level:6,  type:'theme',   id:'sky',    name:'Skyfall Theme' },
     { level:8,  type:'ability', id:'slow',   name:'Slow Time' },
     { level:10, type:'theme',   id:'space',  name:'Deep Space Theme' },
+    { level:12, type:'ability', id:'gflip',  name:'Gravity Flip' },
 ];
 
 const DAILY_XP = [0, 50, 100, 200, 350, 500];
@@ -131,29 +156,85 @@ const DAILY_XP = [0, 50, 100, 200, 350, 500];
 // SHOP & SKINS DATA
 // =====================================================================
 const SHOP_ITEMS = [
+    // Consumables
     { id:'magnet',     cat:'consumable', name:'Magnet',       cost:120,  currency:'coins', desc:'Auto-collect nearby pickups', icon:'\u{1F9F2}' },
     { id:'doubleCoin', cat:'consumable', name:'Double Coins', cost:200,  currency:'coins', desc:'2x coins this run',          icon:'\u{1F4B0}' },
     { id:'extraLife',  cat:'consumable', name:'Extra Life',   cost:5,    currency:'gems',  desc:'Free revive',                icon:'\u{1F496}' },
+    { id:'headStart',  cat:'consumable', name:'Head Start',   cost:150,  currency:'coins', desc:'Start with 5 score & combo', icon:'\u{1F680}' },
+    { id:'coinRush',   cat:'consumable', name:'Coin Rush',    cost:250,  currency:'coins', desc:'3x coin pickups',            icon:'\u{1F4B8}' },
+    { id:'phaseSkip',  cat:'consumable', name:'Phase Skip',   cost:8,    currency:'gems',  desc:'Start at Break phase',       icon:'\u{23E9}' },
+    { id:'bossShield', cat:'consumable', name:'Boss Armor',   cost:10,   currency:'gems',  desc:'Free first boss hit',        icon:'\u{1F6E1}\u{FE0F}' },
+    // Skins
     { id:'flame',      cat:'skin',       name:'Flame',        cost:500,  currency:'coins', desc:'Fire trail',                 icon:'\u{1F525}' },
     { id:'ice',        cat:'skin',       name:'Ice',          cost:500,  currency:'coins', desc:'Frost particles',            icon:'\u{2744}\u{FE0F}' },
     { id:'void',       cat:'skin',       name:'Void',         cost:800,  currency:'coins', desc:'Dark void effect',           icon:'\u{1F300}' },
     { id:'gold',       cat:'skin',       name:'Gold',         cost:10,   currency:'gems',  desc:'Sparkle trail',              icon:'\u{2728}' },
     { id:'pixel',      cat:'skin',       name:'Pixel',        cost:600,  currency:'coins', desc:'Retro style',                icon:'\u{1F47E}' },
     { id:'rainbow',    cat:'skin',       name:'Rainbow',      cost:15,   currency:'gems',  desc:'Color cycle',                icon:'\u{1F308}' },
+    { id:'ember',      cat:'skin',       name:'Ember',        cost:400,  currency:'coins', desc:'Smoldering particles',       icon:'\u{1F6A8}' },
+    { id:'frost',      cat:'skin',       name:'Frostbite',    cost:700,  currency:'coins', desc:'Snowflake trail',            icon:'\u{1F976}' },
+    { id:'neonSkin',   cat:'skin',       name:'Neon Pulse',   cost:900,  currency:'coins', desc:'Cycling neon glow',          icon:'\u{1F4A1}' },
+    { id:'ghost',      cat:'skin',       name:'Ghost',        cost:8,    currency:'gems',  desc:'Transparent fading',         icon:'\u{1F47B}' },
+    { id:'plasma',     cat:'skin',       name:'Plasma',       cost:1200, currency:'coins', desc:'Electric flickers',          icon:'\u{26A1}' },
+    { id:'cherry',     cat:'skin',       name:'Cherry Blossom',cost:10,  currency:'gems',  desc:'Petal particles',            icon:'\u{1F338}' },
+    { id:'shadow',     cat:'skin',       name:'Shadow',       cost:1500, currency:'coins', desc:'Inverted dark glow',         icon:'\u{1F311}' },
+    { id:'diamond',    cat:'skin',       name:'Diamond',      cost:20,   currency:'gems',  desc:'Prismatic sparkle',          icon:'\u{1F48E}' },
+    // Trails
+    { id:'sparkle',    cat:'trail',      name:'Sparkle',      cost:300,  currency:'coins', desc:'Gold sparkle particles',     icon:'\u{2728}' },
+    { id:'smoke',      cat:'trail',      name:'Smoke',        cost:500,  currency:'coins', desc:'Dark smoke puffs',           icon:'\u{1F32B}\u{FE0F}' },
+    { id:'hearts',     cat:'trail',      name:'Hearts',       cost:6,    currency:'gems',  desc:'Pink heart particles',       icon:'\u{1F497}' },
+    { id:'lightning',  cat:'trail',      name:'Lightning',    cost:800,  currency:'coins', desc:'Electric arcs',              icon:'\u{26A1}' },
+    { id:'stars',      cat:'trail',      name:'Stars',        cost:10,   currency:'gems',  desc:'Random color stars',         icon:'\u{2B50}' },
+    { id:'inferno',    cat:'trail',      name:'Inferno Trail',cost:1000, currency:'coins', desc:'Intense flame trail',        icon:'\u{1F525}' },
+    // Themes
     { id:'toxic',      cat:'theme',      name:'Toxic',        cost:1000, currency:'coins', desc:'Green acid palette',         icon:'\u{2622}\u{FE0F}' },
     { id:'candy',      cat:'theme',      name:'Candy',        cost:12,   currency:'gems',  desc:'Pastel pink palette',        icon:'\u{1F36C}' },
+    { id:'arctic',     cat:'theme',      name:'Arctic',       cost:800,  currency:'coins', desc:'Icy blue palette',           icon:'\u{2744}\u{FE0F}' },
+    { id:'sunset',     cat:'theme',      name:'Sunset',       cost:1200, currency:'coins', desc:'Warm orange palette',        icon:'\u{1F305}' },
+    { id:'matrix',     cat:'theme',      name:'Matrix',       cost:15,   currency:'gems',  desc:'Green digital palette',      icon:'\u{1F4BB}' },
+    { id:'royal',      cat:'theme',      name:'Royal',        cost:18,   currency:'gems',  desc:'Gold & purple palette',      icon:'\u{1F451}' },
 ];
-const SHOP_CATS = ['consumable','skin','theme'];
-const SHOP_CAT_LABELS = { consumable:'Power-Ups', skin:'Ball Skins', theme:'Themes' };
+const SHOP_CATS = ['consumable','skin','trail','theme','exchange','gems'];
+const SHOP_CAT_LABELS = { consumable:'Power-Ups', skin:'Skins', trail:'Trails', theme:'Themes', exchange:'Exchange', gems:'Gems' };
+
+const EXCHANGE_TIERS = [
+    { gems:1,  coins:50,  label:'1 \u{1F48E} \u{2192} 50 \u{1FA99}' },
+    { gems:5,  coins:275, label:'5 \u{1F48E} \u{2192} 275 \u{1FA99} (+10%)' },
+    { gems:10, coins:600, label:'10 \u{1F48E} \u{2192} 600 \u{1FA99} (+20%)' },
+];
+
+const IAP_PRODUCTS = [
+    { id:'com.droprush.gems.small',  gems:20,  price:'$0.99',  label:'20 Gems' },
+    { id:'com.droprush.gems.medium', gems:55,  price:'$2.99',  label:'55 Gems' },
+    { id:'com.droprush.gems.large',  gems:120, price:'$4.99',  label:'120 Gems' },
+    { id:'com.droprush.gems.mega',   gems:300, price:'$9.99',  label:'300 Gems' },
+];
+
+const TRAIL_EFFECTS = {
+    sparkle:   { name:'Sparkle',       colors:['#FFD700','#FFFFFF','#FFEE88'], rate:3 },
+    smoke:     { name:'Smoke',         colors:['#444444','#666666','#888888'], rate:2 },
+    hearts:    { name:'Hearts',        colors:['#FF66AA','#FF88CC','#FFAADD'], rate:2 },
+    lightning: { name:'Lightning',     colors:['#4488FF','#88BBFF','#FFFFFF'], rate:4 },
+    stars:     { name:'Stars',         colors:['#FF4444','#44FF44','#4444FF','#FFFF00','#FF44FF','#44FFFF'], rate:3 },
+    inferno:   { name:'Inferno Trail', colors:['#FF2200','#FF4400','#FF6600','#FF8800','#FFAA00'], rate:5 },
+};
 
 const BALL_SKINS = {
-    default: { name:'Default', color:'#FFFFFF', glow:'#FFFFFF', trail:null },
-    flame:   { name:'Flame',   color:'#FF6600', glow:'#FF4400', trail:{ colors:['#FF4400','#FF8800','#FFCC00'], rate:3 } },
-    ice:     { name:'Ice',     color:'#88EEFF', glow:'#44CCFF', trail:{ colors:['#AAEEFF','#FFFFFF','#88CCFF'], rate:2 } },
-    void:    { name:'Void',    color:'#8833CC', glow:'#6611AA', trail:{ colors:['#6611AA','#9944DD','#332266'], rate:2 } },
-    gold:    { name:'Gold',    color:'#FFD700', glow:'#FFAA00', trail:{ colors:['#FFD700','#FFEE88','#FFFFFF'], rate:3 } },
-    pixel:   { name:'Pixel',   color:'#44FF44', glow:'#22CC22', trail:null, pixel:true },
-    rainbow: { name:'Rainbow', color:'#FF0000', glow:'#FF0000', trail:{ colors:['#FF0000','#FF8800','#FFFF00','#00FF00','#0088FF','#8800FF'], rate:4 }, rainbow:true },
+    default:  { name:'Default',  color:'#FFFFFF', glow:'#FFFFFF', trail:null },
+    flame:    { name:'Flame',    color:'#FF6600', glow:'#FF4400', trail:{ colors:['#FF4400','#FF8800','#FFCC00'], rate:3 } },
+    ice:      { name:'Ice',      color:'#88EEFF', glow:'#44CCFF', trail:{ colors:['#AAEEFF','#FFFFFF','#88CCFF'], rate:2 } },
+    void:     { name:'Void',     color:'#8833CC', glow:'#6611AA', trail:{ colors:['#6611AA','#9944DD','#332266'], rate:2 } },
+    gold:     { name:'Gold',     color:'#FFD700', glow:'#FFAA00', trail:{ colors:['#FFD700','#FFEE88','#FFFFFF'], rate:3 } },
+    pixel:    { name:'Pixel',    color:'#44FF44', glow:'#22CC22', trail:null, pixel:true },
+    rainbow:  { name:'Rainbow',  color:'#FF0000', glow:'#FF0000', trail:{ colors:['#FF0000','#FF8800','#FFFF00','#00FF00','#0088FF','#8800FF'], rate:4 }, rainbow:true },
+    ember:    { name:'Ember',    color:'#CC2200', glow:'#FF4400', trail:{ colors:['#CC2200','#882200','#FF4400'], rate:2 } },
+    frost:    { name:'Frostbite',color:'#AADDFF', glow:'#88BBFF', trail:{ colors:['#CCEEFF','#FFFFFF','#88CCFF'], rate:2 } },
+    neonSkin: { name:'Neon Pulse',color:'#00FF88', glow:'#00FFCC', trail:null, neon:true },
+    ghost:    { name:'Ghost',    color:'#FFFFFF', glow:'#CCCCCC', trail:{ colors:['#CCCCCC','#AAAAAA','#888888'], rate:1 }, ghost:true },
+    plasma:   { name:'Plasma',   color:'#4488FF', glow:'#2266FF', trail:{ colors:['#4488FF','#88BBFF','#FFFFFF'], rate:4 } },
+    cherry:   { name:'Cherry Blossom',color:'#FFAACC', glow:'#FF88BB', trail:{ colors:['#FFAACC','#FF88BB','#FF66AA'], rate:2 } },
+    shadow:   { name:'Shadow',   color:'#222233', glow:'#111122', trail:{ colors:['#222233','#333344','#111122'], rate:2 }, shadow:true },
+    diamond:  { name:'Diamond',  color:'#CCDDFF', glow:'#AABBFF', trail:{ colors:['#FF4444','#44FF44','#4444FF','#FFFF44','#FF44FF'], rate:4 }, diamond:true },
 };
 
 // =====================================================================
@@ -526,21 +607,25 @@ class Abilities {
         this.dash   = { charge:0, max:5, on:false, dur:0, maxDur:0.3, ok:false };
         this.slow   = { charge:0, max:8, on:false, dur:0, maxDur:1.5, ok:false };
         this.shield = { charge:0, max:12, ready:false, ok:false };
+        this.gflip  = { charge:0, max:10, on:false, dur:0, maxDur:1.0, ok:false };
         this.used = 0;
     }
     reset() {
         this.dash.charge=0;this.dash.on=false;this.dash.dur=0;
         this.slow.charge=0;this.slow.on=false;this.slow.dur=0;
-        this.shield.charge=0;this.shield.ready=false;this.used=0;
+        this.shield.charge=0;this.shield.ready=false;
+        this.gflip.charge=0;this.gflip.on=false;this.gflip.dur=0;
+        this.used=0;
     }
     sync(prog) {
         this.dash.ok   = prog.hasAbil('dash');
         this.slow.ok   = prog.hasAbil('slow');
         this.shield.ok = prog.hasAbil('shield');
+        this.gflip.ok  = prog.hasAbil('gflip');
     }
     charge(amt) {
         const ch = (ab) => { if(ab.ok && !ab.on) ab.charge = Math.min(ab.max, ab.charge + amt); };
-        ch(this.dash); ch(this.slow);
+        ch(this.dash); ch(this.slow); ch(this.gflip);
         if (this.shield.ok && !this.shield.ready) {
             this.shield.charge = Math.min(this.shield.max, this.shield.charge + amt);
             if (this.shield.charge >= this.shield.max) this.shield.ready = true;
@@ -548,15 +633,19 @@ class Abilities {
     }
     canDash() { return this.dash.ok && this.dash.charge >= this.dash.max && !this.dash.on; }
     canSlow() { return this.slow.ok && this.slow.charge >= this.slow.max && !this.slow.on; }
+    canGFlip(){ return this.gflip.ok && this.gflip.charge >= this.gflip.max && !this.gflip.on; }
     useDash() { if(!this.canDash())return false; this.dash.on=true;this.dash.dur=this.dash.maxDur;this.dash.charge=0;this.used++;return true; }
     useSlow() { if(!this.canSlow())return false; this.slow.on=true;this.slow.dur=this.slow.maxDur;this.slow.charge=0;this.used++;return true; }
     useShield(){ if(!this.shield.ok||!this.shield.ready)return false; this.shield.ready=false;this.shield.charge=0;this.used++;return true; }
+    useGFlip(){ if(!this.canGFlip())return false; this.gflip.on=true;this.gflip.dur=this.gflip.maxDur;this.gflip.charge=0;this.used++;return true; }
     isDash() { return this.dash.on; }
     isSlow() { return this.slow.on; }
+    isGFlip(){ return this.gflip.on; }
     hasShield(){ return this.shield.ready; }
     update(dt) {
         if(this.dash.on){this.dash.dur-=dt;if(this.dash.dur<=0){this.dash.on=false;this.dash.dur=0;}}
         if(this.slow.on){this.slow.dur-=dt;if(this.slow.dur<=0){this.slow.on=false;this.slow.dur=0;}}
+        if(this.gflip.on){this.gflip.dur-=dt;if(this.gflip.dur<=0){this.gflip.on=false;this.gflip.dur=0;}}
     }
 }
 
@@ -571,28 +660,34 @@ class Progression {
             const s = localStorage.getItem('dropRushEvolve');
             if (s) {
                 const d = JSON.parse(s);
-                if (d.v === 3) return d;
+                if (d.v === 4) return d;
+                if (d.v === 3) return this._migrate3(d);
                 if (d.v === 2) return this._migrate2(d);
             }
         } catch {}
         return this._def();
     }
     _def() {
-        return { v:3, xp:0, level:1, best:0, runs:0,
+        return { v:4, xp:0, level:1, best:0, runs:0,
             themes:['neon'], abils:[],
             missions: this._pick(3), dailyDate:null, dailyStreak:0, scores:[],
             coins:0, gems:0,
             skins:['default'], activeSkin:'default',
-            consumables:{ magnet:0, doubleCoin:0, extraLife:0 }
+            trails:[], activeTrail:null,
+            consumables:{ magnet:0, doubleCoin:0, extraLife:0, headStart:0, coinRush:0, phaseSkip:0, bossShield:0 },
+            spunToday:false
         };
     }
-    _migrate2(d) {
-        d.v = 3;
-        d.coins = d.coins || 0;
-        d.gems = d.gems || 0;
-        d.skins = d.skins || ['default'];
-        d.activeSkin = d.activeSkin || 'default';
-        d.consumables = d.consumables || { magnet:0, doubleCoin:0, extraLife:0 };
+    _migrate2(d) { d.v = 3; return this._migrate3(Object.assign({coins:0,gems:0,skins:['default'],activeSkin:'default',consumables:{magnet:0,doubleCoin:0,extraLife:0}},d)); }
+    _migrate3(d) {
+        d.v = 4;
+        d.trails = d.trails || [];
+        d.activeTrail = d.activeTrail || null;
+        if (!d.consumables.headStart) d.consumables.headStart = 0;
+        if (!d.consumables.coinRush) d.consumables.coinRush = 0;
+        if (!d.consumables.phaseSkip) d.consumables.phaseSkip = 0;
+        if (!d.consumables.bossShield) d.consumables.bossShield = 0;
+        if (d.spunToday === undefined) d.spunToday = false;
         return d;
     }
     _save() { try{localStorage.setItem('dropRushEvolve',JSON.stringify(this.d));}catch{} }
@@ -634,6 +729,10 @@ class Progression {
     buySkin(id) { if (!this.d.skins.includes(id)) this.d.skins.push(id); this._save(); }
     setSkin(id) { this.d.activeSkin = id; this._save(); }
     buyTheme(id) { if (!this.d.themes.includes(id)) this.d.themes.push(id); this._save(); }
+    hasTrail(id) { return this.d.trails.includes(id); }
+    buyTrail(id) { if (!this.d.trails.includes(id)) this.d.trails.push(id); this._save(); }
+    setTrail(id) { this.d.activeTrail = id; this._save(); }
+    clearTrail() { this.d.activeTrail = null; this._save(); }
 
     addRun(score) {
         this.d.runs++;
@@ -691,114 +790,158 @@ class Progression {
 }
 
 // =====================================================================
-// AD MANAGER (Google IMA SDK scaffold)
+// AD MANAGER (Capacitor AdMob native plugin)
 // =====================================================================
 class AdManager {
     constructor() {
         this.ready = false;
-        this.adContainer = null;
-        this.adDisplayContainer = null;
-        this.adsLoader = null;
-        this.adsManager = null;
-        this._callback = null;
-        this._type = null;
+        this._admob = null;
+        this._rewardedReady = false;
+        this._interstitialReady = false;
     }
 
-    init() {
-        if (typeof google === 'undefined' || !google.ima) return;
-        this.adContainer = document.getElementById('adContainer');
-        if (!this.adContainer) return;
-
-        this.adDisplayContainer = new google.ima.AdDisplayContainer(this.adContainer);
-        this.adsLoader = new google.ima.AdsLoader(this.adDisplayContainer);
-
-        this.adsLoader.addEventListener(
-            google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
-            e => this._onAdsLoaded(e), false);
-        this.adsLoader.addEventListener(
-            google.ima.AdErrorEvent.Type.AD_ERROR,
-            e => this._onAdError(e), false);
-
-        this.ready = true;
-    }
-
-    _request(type) {
-        if (!this.ready) return false;
-        this._type = type;
-        const req = new google.ima.AdsRequest();
-
-        // TODO: Replace with real ad unit IDs from your AdMob account
-        if (type === 'rewarded') {
-            req.adTagUrl = 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/rewarded&sz=1x1&gdfp_req=1&output=vast';
-        } else {
-            req.adTagUrl = 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_preroll_skippable&sz=640x480&gdfp_req=1&output=vast';
-        }
-
-        req.linearAdSlotWidth = window.innerWidth;
-        req.linearAdSlotHeight = window.innerHeight;
-
+    async init() {
         try {
-            this.adDisplayContainer.initialize();
-            this.adsLoader.requestAds(req);
-            return true;
-        } catch {
-            return false;
+            if (typeof Capacitor === 'undefined' || !Capacitor.Plugins) return;
+            const { AdMob } = Capacitor.Plugins;
+            if (!AdMob) return;
+            this._admob = AdMob;
+
+            await this._admob.initialize({
+                initializeForTesting: true,
+            });
+
+            this._admob.addListener('onRewardedVideoAdLoaded', () => { this._rewardedReady = true; });
+            this._admob.addListener('onInterstitialAdLoaded', () => { this._interstitialReady = true; });
+
+            this.ready = true;
+            this._prepareRewarded();
+            this._prepareInterstitial();
+        } catch (e) {
+            console.warn('AdMob init failed:', e);
         }
     }
 
-    _onAdsLoaded(event) {
-        const settings = new google.ima.AdsRenderingSettings();
-        this.adsManager = event.getAdsManager(settings);
-
-        this.adsManager.addEventListener(google.ima.AdEvent.Type.COMPLETE, () => this._finish(true));
-        this.adsManager.addEventListener(google.ima.AdEvent.Type.SKIPPED, () => this._finish(false));
-        this.adsManager.addEventListener(google.ima.AdEvent.Type.USER_CLOSE, () => this._finish(false));
-        this.adsManager.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, () => this._finish(false));
-        this.adsManager.addEventListener(google.ima.AdEvent.Type.ALL_ADS_COMPLETED, () => this._finish(true));
-
+    async _prepareRewarded() {
+        if (!this._admob) return;
         try {
-            this.adContainer.style.display = 'block';
-            this.adsManager.init(window.innerWidth, window.innerHeight, google.ima.ViewMode.FULLSCREEN);
-            this.adsManager.start();
-        } catch {
-            this._finish(false);
+            // TODO: Replace with your real ad unit ID for production
+            await this._admob.prepareRewardVideoAd({
+                adId: 'ca-app-pub-3940256099942544/1712485313',
+                isTesting: true,
+            });
+        } catch (e) {
+            console.warn('Rewarded prep failed:', e);
         }
     }
 
-    _onAdError() {
-        this._cleanup();
-        if (this._callback) this._callback(false);
-        this._callback = null;
-    }
-
-    _finish(completed) {
-        this._cleanup();
-        if (this._callback) this._callback(completed);
-        this._callback = null;
-    }
-
-    _cleanup() {
-        if (this.adsManager) {
-            this.adsManager.destroy();
-            this.adsManager = null;
+    async _prepareInterstitial() {
+        if (!this._admob) return;
+        try {
+            // TODO: Replace with your real ad unit ID for production
+            await this._admob.prepareInterstitial({
+                adId: 'ca-app-pub-3940256099942544/4411468910',
+                isTesting: true,
+            });
+        } catch (e) {
+            console.warn('Interstitial prep failed:', e);
         }
-        if (this.adContainer) this.adContainer.style.display = 'none';
     }
 
     showRewarded(callback) {
-        this._callback = callback;
-        if (!this._request('rewarded')) {
+        if (!this._admob || !this.ready) { callback(false); return; }
+
+        let rewarded = false;
+        const onReward = this._admob.addListener('onRewarded', () => { rewarded = true; });
+        const onDismiss = this._admob.addListener('onRewardedVideoAdClosed', () => {
+            onReward.remove(); onDismiss.remove();
+            callback(rewarded);
+            this._rewardedReady = false;
+            this._prepareRewarded();
+        });
+        const onFail = this._admob.addListener('onRewardedVideoAdFailedToLoad', () => {
+            onReward.remove(); onDismiss.remove(); onFail.remove();
             callback(false);
-            this._callback = null;
-        }
+            this._prepareRewarded();
+        });
+
+        this._admob.showRewardVideoAd().catch(() => {
+            onReward.remove(); onDismiss.remove(); onFail.remove();
+            callback(false);
+            this._prepareRewarded();
+        });
     }
 
     showInterstitial(callback) {
-        this._callback = () => callback();
-        if (!this._request('interstitial')) {
+        if (!this._admob || !this.ready) { callback(); return; }
+
+        const onClose = this._admob.addListener('onInterstitialAdClosed', () => {
+            onClose.remove();
             callback();
-            this._callback = null;
+            this._interstitialReady = false;
+            this._prepareInterstitial();
+        });
+        const onFail = this._admob.addListener('onInterstitialAdFailedToLoad', () => {
+            onClose.remove(); onFail.remove();
+            callback();
+            this._prepareInterstitial();
+        });
+
+        this._admob.showInterstitial().catch(() => {
+            onClose.remove(); onFail.remove();
+            callback();
+            this._prepareInterstitial();
+        });
+    }
+}
+
+// =====================================================================
+// IAP MANAGER (Capacitor In-App Purchases scaffold)
+// =====================================================================
+class IAPManager {
+    constructor(prog) {
+        this.prog = prog;
+        this.ready = false;
+        this._store = null;
+        this.products = [];
+    }
+
+    async init() {
+        try {
+            if (typeof Capacitor === 'undefined' || !Capacitor.Plugins) return;
+            const { InAppPurchases } = Capacitor.Plugins;
+            if (!InAppPurchases) return;
+            this._store = InAppPurchases;
+            await this._store.initialize();
+            const productIds = IAP_PRODUCTS.map(p => p.id);
+            try {
+                const result = await this._store.getProducts({ productIds });
+                this.products = result?.products || [];
+            } catch { this.products = []; }
+            this.ready = true;
+        } catch (e) {
+            console.warn('IAP init failed:', e);
         }
+    }
+
+    async purchase(productId, onSuccess) {
+        if (!this._store) {
+            const item = IAP_PRODUCTS.find(p => p.id === productId);
+            if (item) { this.prog.addGems(item.gems); onSuccess(item.gems); }
+            return;
+        }
+        try {
+            await this._store.purchase({ productId });
+            const item = IAP_PRODUCTS.find(p => p.id === productId);
+            if (item) { this.prog.addGems(item.gems); onSuccess(item.gems); }
+        } catch (e) {
+            console.warn('Purchase failed:', e);
+        }
+    }
+
+    async restore() {
+        if (!this._store) return;
+        try { await this._store.restorePurchases(); } catch {}
     }
 }
 
@@ -814,6 +957,8 @@ class Game {
         this.ads.init();
         this.particles = new Particles();
         this.prog = new Progression();
+        this.iap = new IAPManager(this.prog);
+        this.iap.init();
         this.abil = new Abilities();
         this.abil.sync(this.prog);
 
@@ -869,8 +1014,14 @@ class Game {
         this.shopDragging = false;
 
         // Consumable selection for pre-run
-        this.selectedConsumables = { magnet:false, doubleCoin:false, extraLife:false };
-        this.activeConsumables = { magnet:false, doubleCoin:false, extraLife:false };
+        this.selectedConsumables = { magnet:false, doubleCoin:false, extraLife:false, headStart:false, coinRush:false, phaseSkip:false, bossShield:false };
+        this.activeConsumables = { magnet:false, doubleCoin:false, extraLife:false, headStart:false, coinRush:false, phaseSkip:false, bossShield:false };
+
+        // Lucky spin state
+        this.spinState = 'none';
+        this.spinAngle = 0;
+        this.spinSpeed = 0;
+        this.spinResult = null;
 
         // Run currency earnings
         this.runCoins = 0; this.runGems = 0;
@@ -941,6 +1092,15 @@ class Game {
             }
             const x = tx(e), y = ty(e);
 
+            if (this.spinState === 'done') { this.spinState = 'none'; this.audio.click(); return; }
+            if (this.spinState === 'ready' || this.spinState === 'spinning') {
+                if (this._hit('spinBtn',x,y) && this.spinState==='ready') {
+                    this.spinSpeed = 12 + Math.random() * 8;
+                    this.spinState = 'spinning';
+                    this.audio.click();
+                }
+                return;
+            }
             if (this.state === 'MENU') {
                 if (this._hit('play',x,y))    { this.audio.click(); this._start(); return; }
                 if (this._hit('versus',x,y))  { this.audio.click(); this.state='VS_LOBBY'; return; }
@@ -952,9 +1112,17 @@ class Game {
                     this.audio.daily();
                     const dr = this.prog.claimDaily();
                     this.dailyAmt = dr.xp; this.dailyGems = dr.gems;
-                    this.prog.addXp(dr.xp); this.dailyPop=2.5; return;
+                    this.prog.addXp(dr.xp); this.dailyPop=2.5;
+                    this.spinState='ready'; this.spinAngle=0; this.spinSpeed=0; this.spinResult=null;
+                    return;
                 }
-                for (const cid of ['magnet','doubleCoin','extraLife']) {
+                if (this._hit('spinBtn',x,y) && this.spinState==='ready') {
+                    this.spinSpeed = 12 + Math.random() * 8;
+                    this.spinState = 'spinning';
+                    this.audio.click();
+                    return;
+                }
+                for (const cid of ['magnet','doubleCoin','extraLife','headStart','coinRush','phaseSkip','bossShield']) {
                     if (this._hit('con_'+cid,x,y) && this.prog.getConsumable(cid) > 0) {
                         this.audio.click();
                         this.selectedConsumables[cid] = !this.selectedConsumables[cid];
@@ -969,9 +1137,30 @@ class Game {
                 for (let i = 0; i < SHOP_CATS.length; i++) {
                     if (this._hit('shopTab'+i,x,y)) { this.audio.click(); this.shopCat=SHOP_CATS[i]; this.shopScroll=0; return; }
                 }
-                const items = SHOP_ITEMS.filter(it => it.cat === this.shopCat);
-                for (let i = 0; i < items.length; i++) {
-                    if (this._hit('shopItem'+i,x,y)) { this._buyItem(items[i]); return; }
+                if (this.shopCat === 'exchange') {
+                    for (let i = 0; i < EXCHANGE_TIERS.length; i++) {
+                        if (this._hit('exch'+i,x,y)) {
+                            const t = EXCHANGE_TIERS[i];
+                            if (this.prog.spend('gems', t.gems)) {
+                                this.prog.addCoins(t.coins);
+                                this.audio.buy();
+                            }
+                            return;
+                        }
+                    }
+                } else if (this.shopCat === 'gems') {
+                    for (let i = 0; i < IAP_PRODUCTS.length; i++) {
+                        if (this._hit('iap'+i,x,y)) {
+                            const p = IAP_PRODUCTS[i];
+                            this.iap.purchase(p.id, (gems) => { this.audio.gem(); });
+                            return;
+                        }
+                    }
+                } else {
+                    const items = SHOP_ITEMS.filter(it => it.cat === this.shopCat);
+                    for (let i = 0; i < items.length; i++) {
+                        if (this._hit('shopItem'+i,x,y)) { this._buyItem(items[i]); return; }
+                    }
                 }
                 this.shopTouchY = y; this.shopDragging = true;
                 return;
@@ -1168,6 +1357,17 @@ class Game {
                 this.prog.setSkin(item.id);
                 this.audio.buy();
             }
+        } else if (item.cat === 'trail') {
+            if (this.prog.hasTrail(item.id)) {
+                if (this.prog.d.activeTrail === item.id) { this.prog.clearTrail(); }
+                else { this.prog.setTrail(item.id); }
+                this.audio.click();
+            } else {
+                if (!this.prog.spend(item.currency, item.cost)) return;
+                this.prog.buyTrail(item.id);
+                this.prog.setTrail(item.id);
+                this.audio.buy();
+            }
         } else if (item.cat === 'theme') {
             if (this.prog.hasTheme(item.id)) {
                 this.themeKey = item.id;
@@ -1236,13 +1436,24 @@ class Game {
         this.msnRes=null;this.xpEarned=0;this.lvlUpT=0;
 
         // Activate selected consumables
-        this.activeConsumables = { magnet:false, doubleCoin:false, extraLife:false };
-        for (const cid of ['magnet','doubleCoin','extraLife']) {
+        const allCons = ['magnet','doubleCoin','extraLife','headStart','coinRush','phaseSkip','bossShield'];
+        this.activeConsumables = {};
+        for (const c of allCons) this.activeConsumables[c] = false;
+        for (const cid of allCons) {
             if (this.selectedConsumables[cid] && this.prog.useConsumable(cid)) {
                 this.activeConsumables[cid] = true;
             }
         }
-        this.selectedConsumables = { magnet:false, doubleCoin:false, extraLife:false };
+        for (const c of allCons) this.selectedConsumables[c] = false;
+
+        // Apply Head Start
+        if (this.activeConsumables.headStart) {
+            this.score = 5; this.combo = 5; this.scoreDsp = 5;
+        }
+        // Apply Phase Skip
+        if (this.activeConsumables.phaseSkip) {
+            this.phase = 2; this.runTime = PHASES[2].at;
+        }
     }
 
     _revive() {
@@ -1635,9 +1846,9 @@ class Game {
         const sa = (Math.PI * 2) / nSeg;
         for (let i = 0; i < nSeg; i++) {
             if (segs[i]) continue;
-            if (_r() < 0.25) {
+            if (_r() < 0.15) {
                 const pAngle = rot + (i + 0.5) * sa;
-                const pType = _r() < 0.03 ? 'gem' : 'coin';
+                const pType = _r() < 0.015 ? 'gem' : 'coin';
                 this.pickups.push(new Pickup(this.maxR, pAngle, pType));
             }
         }
@@ -1677,6 +1888,24 @@ class Game {
         this.mTime += dt;
         for (const l of this.bgL) l.update(dt);
         if (this.dailyPop > 0) this.dailyPop -= dt;
+
+        if (this.spinState === 'spinning') {
+            this.spinAngle += this.spinSpeed * dt;
+            this.spinSpeed *= 0.97;
+            if (this.spinSpeed < 0.3) {
+                this.spinState = 'done';
+                const SPIN_PRIZES = [
+                    {type:'coins',amt:10},{type:'coins',amt:25},{type:'coins',amt:50},
+                    {type:'gems',amt:1},{type:'gems',amt:3},{type:'consumable',id:'magnet'}
+                ];
+                const idx = Math.floor(((this.spinAngle % (Math.PI*2)) / (Math.PI*2)) * 6) % 6;
+                this.spinResult = SPIN_PRIZES[idx];
+                if (this.spinResult.type==='coins') this.prog.addCoins(this.spinResult.amt);
+                else if (this.spinResult.type==='gems') this.prog.addGems(this.spinResult.amt);
+                else if (this.spinResult.type==='consumable') this.prog.addConsumable(this.spinResult.id);
+                this.audio.gem();
+            }
+        }
 
         if (this.state === 'PLAYING') {
             let ts = 1;
@@ -1775,26 +2004,33 @@ class Game {
                 }
             }
 
-            // Ball skin trail
+            // Ball skin/trail particles
             const skin = BALL_SKINS[this.prog.d.activeSkin] || BALL_SKINS.default;
-            if (skin.trail && this.state === 'PLAYING') {
+            const activeTrailId = this.prog.d.activeTrail;
+            const trailData = activeTrailId && TRAIL_EFFECTS[activeTrailId] ? TRAIL_EFFECTS[activeTrailId] : skin.trail;
+            if (trailData && this.state === 'PLAYING') {
                 const bx=this.cx+Math.cos(this.ballAng)*this.ballOrb;
                 const by=this.cy+Math.sin(this.ballAng)*this.ballOrb;
-                if (Math.random() < skin.trail.rate * dt * 10) {
-                    this.particles.emitTrail(bx, by, pick(skin.trail.colors));
+                if (Math.random() < trailData.rate * dt * 10) {
+                    this.particles.emitTrail(bx, by, pick(trailData.colors));
                 }
             }
 
             // Rings collision
             for (const ring of this.rings) {
                 const prev = ring.radius;
-                ring.update(gdt, ring.isBoss ? speed * 0.55 : speed);
+                const ringSpd = (ring.isBoss ? speed * 0.55 : speed) * (this.abil.isGFlip() ? -1.5 : 1);
+                ring.update(gdt, ringSpd);
 
                 if (!ring.passed && prev > this.ballOrb && ring.radius <= this.ballOrb) {
                     if (ring.isBoss) {
                         const eff = this.ballAng - this.gRot;
                         if (ring.isGapAt(eff) || this.od > 0) {
                             this._bossHit(ring);
+                        } else if (this.activeConsumables.bossShield) {
+                            this.activeConsumables.bossShield = false;
+                            this._bossHit(ring);
+                            this.floats.push(new FloatText('BOSS ARMOR!',this.cx,this.cy-70,'#44AAFF',22));
                         } else if (this.abil.hasShield()) {
                             this._shieldHit(ring);
                         } else {
@@ -1847,7 +2083,7 @@ class Game {
                             this.particles.emit(bx, by, 12, '#AA44FF', 120, 3, 0.4);
                             this.floats.push(new FloatText('+1 \u{1F48E}', bx, by-25, '#CC66FF', 16));
                         } else {
-                            let amt = this.activeConsumables.doubleCoin ? 2 : 1;
+                            let amt = this.activeConsumables.coinRush ? 3 : this.activeConsumables.doubleCoin ? 2 : 1;
                             this.runCoins += amt;
                             this.audio.coin();
                             this.particles.emit(bx, by, 8, '#FFD700', 80, 2, 0.3);
@@ -1940,7 +2176,7 @@ class Game {
             this.bossActive = false;
             this.ringTmr = 0;
             this.combo += 5; this.score += 10;
-            this.runCoins += 5; this.runGems += 1;
+            this.runCoins += 3; this.runGems += 1;
             this.audio.bossDie();
             this.particles.emit(bx,by,40,'#FF2244',280,6,0.8);
             this.particles.emit(bx,by,25,'#FFD700',200,4,0.6);
@@ -2012,8 +2248,14 @@ class Game {
 
         this.newBest = this.prog.addRun(this.score);
 
+        // Streak bonus
+        const mc = this.runSt.maxCombo;
+        if (mc >= 30) this.runCoins += 30;
+        else if (mc >= 20) this.runCoins += 15;
+        else if (mc >= 10) this.runCoins += 5;
+
         // Currency rewards
-        const baseCoinReward = this.score + this.runSt.maxCombo;
+        const baseCoinReward = Math.floor(this.score * 0.5) + Math.floor(mc * 0.5);
         const coinMult = this.activeConsumables.doubleCoin ? 2 : 1;
         this.runCoins += baseCoinReward * coinMult;
         if (this.newBest) this.runGems += 1;
@@ -2085,6 +2327,7 @@ class Game {
             c.fillRect(-20,-20,this.w+40,this.h+40);
         }
         if (this.dailyPop > 0) this._drawDailyPop(c);
+        if (this.spinState !== 'none') this._drawSpin(c);
         c.restore();
     }
 
@@ -2380,14 +2623,14 @@ class Game {
 
         // Pre-run consumable slots
         const conY = by + bh + 12;
-        const conSz = 36;
-        const conGap = 10;
-        const conIds = ['magnet','doubleCoin','extraLife'];
-        const conIcons = ['\u{1F9F2}','\u{1F4B0}','\u{1F496}'];
-        const totalConW = conSz * 3 + conGap * 2;
+        const conSz = 30;
+        const conGap = 6;
+        const conIds = ['magnet','doubleCoin','extraLife','headStart','coinRush','phaseSkip','bossShield'];
+        const conIcons = ['\u{1F9F2}','\u{1F4B0}','\u{1F496}','\u{1F680}','\u{1F4B8}','\u{23E9}','\u{1F6E1}\u{FE0F}'];
+        const totalConW = conSz * conIds.length + conGap * (conIds.length - 1);
         const conStartX = this.cx - totalConW / 2;
 
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < conIds.length; i++) {
             const cx2 = conStartX + i * (conSz + conGap);
             const owned = this.prog.getConsumable(conIds[i]);
             const sel = this.selectedConsumables[conIds[i]];
@@ -2472,47 +2715,96 @@ class Game {
         c.fillText('\u{2190} Back',backX+8,backY+backH/2);
         this.btns.shopBack={x:backX,y:backY,w:backW,h:backH};
 
-        // Category tabs
-        const tabW=Math.min(this.w*0.27,100),tabH=32,tabGap=6;
-        const tabTotalW=tabW*3+tabGap*2;
-        const tabX=this.cx-tabTotalW/2;
-        const tabY=this.h*0.13;
+        // Category tabs (scrollable row)
+        const tabW=Math.min(this.w*0.2,78),tabH=28,tabGap=5;
+        const tabTotalW=tabW*SHOP_CATS.length+tabGap*(SHOP_CATS.length-1);
+        const tabX=Math.min(this.cx-tabTotalW/2, 10);
+        const tabY=this.h*0.12;
 
         for(let i=0;i<SHOP_CATS.length;i++){
             const x=tabX+i*(tabW+tabGap);
             const active = this.shopCat===SHOP_CATS[i];
             this.btns['shopTab'+i]={x,y:tabY,w:tabW,h:tabH};
-            c.beginPath();this._rr(c,x,tabY,tabW,tabH,16);
+            c.beginPath();this._rr(c,x,tabY,tabW,tabH,14);
             c.fillStyle=active?rgba(this.theme.accent,0.2):'rgba(255,255,255,0.05)';c.fill();
-            c.beginPath();this._rr(c,x,tabY,tabW,tabH,16);
+            c.beginPath();this._rr(c,x,tabY,tabW,tabH,14);
             c.strokeStyle=active?this.theme.accent:'rgba(255,255,255,0.1)';c.lineWidth=active?2:1;c.stroke();
-            const tfs=Math.min(this.w*0.03,12);
+            const tfs=Math.min(this.w*0.025,10);
             c.font=`600 ${tfs}px ${CONFIG.FONT}`;c.textAlign='center';c.textBaseline='middle';
             c.fillStyle=active?'#FFFFFF':'rgba(255,255,255,0.5)';
             c.fillText(SHOP_CAT_LABELS[SHOP_CATS[i]],x+tabW/2,tabY+tabH/2);
         }
 
-        // Items list
-        const items = SHOP_ITEMS.filter(it => it.cat === this.shopCat);
-        const itemH = 64, itemGap = 8;
-        const listY = tabY + tabH + 16;
+        const listY2 = tabY + tabH + 12;
         const listW = Math.min(this.w * 0.88, 340);
         const listX = this.cx - listW / 2;
 
+        // Exchange tab
+        if (this.shopCat === 'exchange') {
+            const exFs = Math.min(this.w*0.04,16);
+            c.font=`700 ${exFs}px ${CONFIG.FONT}`;c.textAlign='center';c.textBaseline='middle';
+            c.fillStyle='#FFFFFF';c.fillText('Convert Gems to Coins',this.cx,listY2+20);
+            for (let i = 0; i < EXCHANGE_TIERS.length; i++) {
+                const t = EXCHANGE_TIERS[i];
+                const ey = listY2+50+i*60;
+                const ebW=Math.min(this.w*0.7,280),ebH=44;
+                const ebX=this.cx-ebW/2;
+                this.btns['exch'+i]={x:ebX,y:ey,w:ebW,h:ebH};
+                const canA = this.prog.gems >= t.gems;
+                c.beginPath();this._rr(c,ebX,ey,ebW,ebH,22);
+                c.fillStyle=canA?rgba(this.theme.accent,0.15):'rgba(255,255,255,0.04)';c.fill();
+                c.beginPath();this._rr(c,ebX,ey,ebW,ebH,22);
+                c.strokeStyle=canA?this.theme.accent:'rgba(255,255,255,0.1)';c.lineWidth=1.5;c.stroke();
+                c.font=`700 ${Math.min(this.w*0.035,14)}px ${CONFIG.FONT}`;
+                c.fillStyle=canA?'#FFFFFF':'rgba(255,255,255,0.3)';
+                c.fillText(t.label,this.cx,ey+ebH/2);
+            }
+            return;
+        }
+
+        // Gems (IAP) tab
+        if (this.shopCat === 'gems') {
+            const gFs = Math.min(this.w*0.04,16);
+            c.font=`700 ${gFs}px ${CONFIG.FONT}`;c.textAlign='center';c.textBaseline='middle';
+            c.fillStyle='#AA44FF';c.fillText('Purchase Gems',this.cx,listY2+20);
+            for (let i = 0; i < IAP_PRODUCTS.length; i++) {
+                const p = IAP_PRODUCTS[i];
+                const gy = listY2+50+i*60;
+                const gbW=Math.min(this.w*0.7,280),gbH=44;
+                const gbX=this.cx-gbW/2;
+                this.btns['iap'+i]={x:gbX,y:gy,w:gbW,h:gbH};
+                c.beginPath();this._rr(c,gbX,gy,gbW,gbH,22);
+                c.fillStyle=rgba('#AA44FF',0.12);c.fill();
+                c.beginPath();this._rr(c,gbX,gy,gbW,gbH,22);
+                c.strokeStyle='#AA44FF';c.lineWidth=1.5;c.stroke();
+                c.font=`700 ${Math.min(this.w*0.035,14)}px ${CONFIG.FONT}`;
+                c.fillStyle='#FFFFFF';
+                c.fillText(`\u{1F48E} ${p.label}  -  ${p.price}`,this.cx,gy+gbH/2);
+            }
+            return;
+        }
+
+        // Items list (consumable, skin, trail, theme)
+        const items = SHOP_ITEMS.filter(it => it.cat === this.shopCat);
+        const itemH = 64, itemGap = 8;
+
         c.save();
         c.beginPath();
-        c.rect(0, listY, this.w, this.h - listY - 10);
+        c.rect(0, listY2, this.w, this.h - listY2 - 10);
         c.clip();
 
         for (let i = 0; i < items.length; i++) {
             const item = items[i];
-            const iy = listY + i * (itemH + itemGap) - this.shopScroll;
+            const iy = listY2 + i * (itemH + itemGap) - this.shopScroll;
             if (iy + itemH < listY || iy > this.h) continue;
 
             let owned = false, equipped = false;
             if (item.cat === 'skin') {
                 owned = this.prog.hasSkin(item.id);
                 equipped = this.prog.d.activeSkin === item.id;
+            } else if (item.cat === 'trail') {
+                owned = this.prog.hasTrail(item.id);
+                equipped = this.prog.d.activeTrail === item.id;
             } else if (item.cat === 'theme') {
                 owned = this.prog.hasTheme(item.id);
                 equipped = this.themeKey === item.id;
@@ -2793,6 +3085,60 @@ class Game {
         c.fillStyle = '#FFFFFF';
         c.fillText(`Day ${this.prog.streak()} Streak!`, this.cx, y + 52);
         c.shadowBlur = 0; c.globalAlpha = 1;
+    }
+
+    _drawSpin(c) {
+        if (this.spinState === 'none') return;
+        c.fillStyle='rgba(0,0,0,0.7)';c.fillRect(0,0,this.w,this.h);
+
+        const r = Math.min(this.w*0.3, 120);
+        const scx = this.cx, scy = this.h * 0.45;
+        const labels = ['10\u{1FA99}','25\u{1FA99}','50\u{1FA99}','1\u{1F48E}','3\u{1F48E}','\u{1F9F2}'];
+        const cols = ['#FF6644','#44AAFF','#FFCC00','#AA44FF','#FF44AA','#44FF88'];
+
+        c.save();
+        c.translate(scx, scy);
+        c.rotate(this.spinAngle);
+        for (let i = 0; i < 6; i++) {
+            const a1 = (i/6)*Math.PI*2, a2 = ((i+1)/6)*Math.PI*2;
+            c.beginPath();c.moveTo(0,0);c.arc(0,0,r,a1,a2);c.closePath();
+            c.fillStyle=cols[i];c.fill();
+            c.strokeStyle='rgba(0,0,0,0.3)';c.lineWidth=2;c.stroke();
+            const mid=(a1+a2)/2;
+            const lx=Math.cos(mid)*r*0.6, ly=Math.sin(mid)*r*0.6;
+            c.save();c.translate(lx,ly);c.rotate(mid+Math.PI/2);
+            c.font=`700 ${Math.min(r*0.15,14)}px ${CONFIG.FONT}`;c.textAlign='center';c.textBaseline='middle';
+            c.fillStyle='#FFFFFF';c.fillText(labels[i],0,0);
+            c.restore();
+        }
+        c.restore();
+
+        c.beginPath();c.moveTo(scx,scy-r-10);c.lineTo(scx-10,scy-r+8);c.lineTo(scx+10,scy-r+8);c.closePath();
+        c.fillStyle='#FFFFFF';c.fill();
+
+        const ts=Math.min(this.w*0.06,24);
+        c.font=`800 ${ts}px ${CONFIG.FONT}`;c.textAlign='center';c.textBaseline='middle';
+        c.fillStyle='#FFE66D';
+        c.fillText('LUCKY SPIN!',scx,scy-r-30);
+
+        if (this.spinState === 'ready') {
+            const bw=Math.min(this.w*0.4,160),bh=44;
+            const bx2=this.cx-bw/2,by2=scy+r+20;
+            this.btns.spinBtn={x:bx2,y:by2,w:bw,h:bh};
+            this._btn(c,bx2,by2,bw,bh,'SPIN!',this.theme.accent,rgba(this.theme.accent,0.7));
+        }
+        if (this.spinState === 'done' && this.spinResult) {
+            c.font=`700 ${Math.min(this.w*0.05,20)}px ${CONFIG.FONT}`;
+            c.fillStyle='#FFFFFF';
+            let txt = '';
+            if (this.spinResult.type==='coins') txt = `+${this.spinResult.amt} Coins!`;
+            else if (this.spinResult.type==='gems') txt = `+${this.spinResult.amt} Gems!`;
+            else txt = '+1 Magnet!';
+            c.fillText(txt,scx,scy+r+30);
+            c.font=`400 ${Math.min(this.w*0.03,12)}px ${CONFIG.FONT}`;
+            c.fillStyle='rgba(255,255,255,0.4)';
+            c.fillText('Tap anywhere to close',scx,scy+r+55);
+        }
     }
 
     // ----- helpers -----
